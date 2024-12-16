@@ -40,16 +40,18 @@
         <h2 class="text-left mb-4 fw-bold">Supplements</h2>
         <div class="row justify-content-center">
             @foreach ($data as $product)
-                <div class="col-md-2 mb-4 d-flex justify-content-center">
-                    <a href="{{ route('detailObat', ['id' => $product->id]) }}" class="card product-card">
-                        <img src="{{ asset('images/' . $product->image) }}" class="card-img-top product-image"
-                            alt="{{ $product->nama_obat }}">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">{{ $product->nama_obat }}</h5>
-                            <p class="card-price">Rp. {{ $product->harga_obat }}</p>
-                        </div>
-                    </a>
-                </div>
+                @if ($product->id < 12)
+                    <div class="col-md-2 mb-4 d-flex justify-content-center">
+                        <a href="{{ route('detailObat', ['id' => $product->id]) }}" class="card product-card">
+                            <img src="{{ asset('images/' . $product->image) }}" class="card-img-top product-image"
+                                alt="{{ $product->nama_obat }}">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">{{ $product->nama_obat }}</h5>
+                                <p class="card-price">Rp. {{ $product->harga_obat }}</p>
+                            </div>
+                        </a>
+                    </div>
+                @endif
             @endforeach
 
         </div>

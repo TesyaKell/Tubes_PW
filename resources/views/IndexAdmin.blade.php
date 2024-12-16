@@ -249,7 +249,7 @@
             </ul>
             <ul class="nav flex-column mt-auto">
                 <li class="nav-item">
-                    <a href="/" class="nav-link">
+                    <a href="/login" class="nav-link">
                         <i class="fa fa-sign-out-alt"></i> Logout
                     </a>
                 </li>

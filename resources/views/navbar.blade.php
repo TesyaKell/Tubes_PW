@@ -5,6 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ATMA - Health Solutions</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
@@ -13,6 +17,7 @@
     <style>
         body {
             background-color: #F4F1E3;
+            font-family: 'Poppins', sans-serif;
         }
 
         .navbar {
@@ -57,6 +62,19 @@
         .footer {
             background-color: #768A6E;
             padding: 20px 0;
+            margin-top: 8.6rem;
+        }
+
+        * {
+            font-family: "Montserrat", sans-serif;
+        }
+
+        .nav-item.dropdown .dropdown-toggle {
+            margin-left: 5px;
+        }
+
+        .dropdown-menu {
+            min-width: 120px;
         }
     </style>
 </head>
@@ -66,7 +84,7 @@
     <nav class="navbar navbar-expand-lg">
         <div class="row mx-2" style="flex-grow: 1">
             <div class="col-3">
-                <a class="navbar-brand" href="/home">
+                <a class="navbar-brand" href="{{ '/home' }}">
                     <img src="{{ asset('images/Logo.png') }}" alt="Atma" width="135" height="50">
                 </a>
             </div>
@@ -80,26 +98,47 @@
             <div class="col-3 d-flex justify-content-end">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{url('/cart')}}">
+                        <a class="nav-link" href="{{ url('/cart') }}">
                             <img src="{{ asset('images/cart.png') }}" alt="Atma" width="83" class= "me-4"
                                 height="35">
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url('profil') }}">
-                            <img src="{{ asset('images/profilKosong.png') }}" alt="Atma" width="45"
-                                class= "me-4" height="40">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="{{ Auth::user()->profile_photo_path ? url('storage/' . Auth::user()->profile_photo_path) : asset('images/profilKosong.png') }}"
+                                alt="Atma" width="45" class="me-1" height="40"
+                                style="border-radius: 100%; aspect-ratio: 1/1; max-width: 50px; object-fit: fill;">
                         </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="{{ url('profil') }}">Profile</a></li>
+                            <li><a class="dropdown-item" href="{{ url('historyreservasi') }}">History</a>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Content goes here -->
     <div>
         @yield('content')
     </div>
+
+    @if (session('successToast') || session('errorToast'))
+        <div class="toast-container position-fixed bottom-0 start-0 p-3" style="z-index: 1055;">
+            <div class="toast align-items-center text-white {{ session('successToast') ? 'bg-success' : 'bg-danger' }} border-0"
+                role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        {{ session('successToast') ?? session('errorToast') }}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                        aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+    @endif
 
     <!-- Footer -->
     <footer class="footer">
@@ -118,7 +157,6 @@
                     <div class="quick-links">
                         <a href="{{ route('home') }}" class="text-white">Home</a>
                         <br>
-                        {{-- <a href="{{ route('about') }}" class="text-white">About</a> --}}
                     </div>
                 </div>
 
@@ -130,6 +168,16 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var toastElList = [].slice.call(document.querySelectorAll('.toast'));
+            var toastList = toastElList.map(function(toastEl) {
+                return new bootstrap.Toast(toastEl);
+            });
+            toastList.forEach(toast => toast.show());
+        });
+    </script>
 
     <script>
         const obatArray = [
@@ -152,7 +200,6 @@
             } else {
                 alert("Product not found");
             }
-            // Reset input
             document.getElementById('search-input').value = '';
         }
     </script>

@@ -1,126 +1,170 @@
 <?php
 
+use App\Http\Controllers\ObatController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\ReservasiKonsultasiController;
+use App\Models\PembelianObat;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TransaksiController;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+
+//use App\Http\Controllers\ReservasiController;
 
 
 $user = [
     'profil' => [
-        'username' => '',
         'name' => '',
         'password' => '',
-        'phone' => '',
+        'phone_number' => '',
         'address' => '',
         'email' => '',
     ]];
 
 session(['user' => $user]);
 
-
-Route::get('/reservation', function () {
-    return view('reservation');
-})->name('reservation'); 
-
-Route::get('/profil', function () {
-    return view('profil');
-})->name('profil'); 
-
-Route::get('/obat', function () {
-    return view('obat');
-})->name('obat');
-
-Route::get('/jenisObat', function () {
-    return view('jenisObat');
-})->name('jenisObat');
-
-Route::get('/detailObat', function () {
-    return view('detailObat');
-})->name('detailObat');
-
-Route::get('/cart', function () {
-    return view('cart');
-})->name('cart');
-
-Route::get('/home', function () {
-    return view('home');
-})->name('home');
-
-
 Route::get('/', function () {
-    return view('login', ['error' => null]);
-})->name('login');
-
-Route::post('/', function () {
-    if ($_POST["email"] == "" && $_POST['password'] == "") {
-        return view('/login', ['error' => 'Register Terlebih Dahulu!']); 
-    }
-
-    if ($_POST['email'] == session('user')['profil']['email'] && 
-        $_POST['password'] == session('user')['profil']['password']) {
-        return view('home');
-    }
-
-    if ($_POST["email"] == "admin@admin.com" && $_POST['password'] == "1234") {
-        return view('admin.dashboard'); 
-    }
-
-    return view('/login', ['error' => 'Email / Username / Password Salah!']);
+    return redirect('/login');
 });
 
-Route::get('/register', function () {
-    return view('register');
-});
+//ROUTE LOGIN 
+Route::get('/login', [UserController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [UserController::class, 'login'])->name('login');
 
-Route::post('/register', function () {
-    $userData = [
-        'profil' => [
-            'username' => $_POST['username'],
-            'name' => $_POST['name'],
-            'password' => $_POST['password'],
-            'phone' => $_POST['phone'],
-            'email' => $_POST['email'],
-            'address' => $_POST['address']
-        ]
-    ];
-    
-    session(['user' => $userData]);
-
-    return redirect('/');
-});
+//ROUTE REGISTER
+Route::post('/register', [UserController::class, 'register'])->name('register');
+Route::get('/register', [UserController::class, 'showRegistrationForm'])->name('register');
 
 Route::get('/forgotpassword', function () {
     return view('forgotpassword');
 });
 
+//ROUTE PROFIL
+Route::get('/profil', [UserController::class, 'showProfilForm'])->middleware('auth')->name('profil');
+Route::put('/profile/{id}', [UserController::class, 'update'])->name('profile.update');
+
+// Route untuk logout
+Route::post('/logout', [UserController::class, 'logout'])->name('logout');
+
+// ROUTE OBAT
+Route::get('/home', [ObatController::class, 'index'])->name('home'); // untuk tampil data di customer
+Route::get('/obat/{id}', [ObatController::class, 'show'])->name('detailObat'); // untuk tampil data di customer
+
+Route::post('/obat/store', [ObatController::class, 'store']);// untuk admin
+
+
+// Route::get('/obat/{id}', [ObatController::class, 'show']);// tampil satu data obat
+Route::put('/obat/update/{id}', [ObatController::class, 'update'])->name('obat.update');// untuk admin
+Route::delete('/obat/delete/{id}', [ObatController::class, 'delete'])->name('obat.delete'); // untuk admin
+
+
+
+//ROUTE RESERVASI
+
+//Session
+Route::post('/consultation/store', [ReservasiKonsultasiController::class, 'storeConsultation'])->name('consultation.store');
+
+// Tampilkan semua reservasi
+Route::get('/reservasi', [ReservasiKonsultasiController::class, 'index'])->name('reservasi.index');
+
+// Form tambah reservasi
+Route::get('/reservasi/create', [ReservasiKonsultasiController::class, 'create'])->name('reservasi.create');
+
+// Simpan data reservasi
+Route::post('/reservasi', [ReservasiKonsultasiController::class, 'store'])->name('reservasi.store');
+Route::post('/reservasi/store', [ReservasiKonsultasiController::class, 'store'])->name('reservasi.store');
+Route::post('/reservasi/store', [ReservasiKonsultasiController::class, 'store'])->middleware('auth')->name('reservasi.store');
+
+
+// Tampilkan detail reservasi
+Route::get('/reservasi/{id}', [ReservasiKonsultasiController::class, 'show'])->name('reservasi.show');
+Route::get('/historyreservasi', [ReservasiKonsultasiController::class, 'history'])->name('reservasi.history');
+
+// Form edit reservasi
+Route::get('/reservasi/{id}/edit', [ReservasiKonsultasiController::class, 'edit'])->name('reservasi.edit');
+
+// Update data reservasi
+Route::put('/reservasi/{id}', [ReservasiKonsultasiController::class, 'update'])->name('reservasi.update');
+
+// Hapus reservasi
+Route::delete('/reservasi/{id}', [ReservasiKonsultasiController::class, 'destroy'])->name('reservasi.destroy');
+
+
+Route::get('/reservation', function () {
+    return view('reservation');
+})->name('reservation'); 
+
+Route::get('/obat', function () {
+    return view('obat');
+})->name('obat');
+
+Route::get('/listObat', [ObatController::class, 'showKatalog'])->name('listObat');
+Route::get('/jenisObat/{jenis}', [ObatController::class, 'getAllObatByJenis'])->name('jenisObat');
+
+// Route::get('/detailObat', function () {
+//     return view('detailObat');
+// })->name('detailObat');
+
+Route::get('/cart', function(){
+    return view('cart');
+})->name('cart');
+
+
 Route::get('/about', function () {
     return view('about');
 })->name('about');
 
-Route::get('/obat/{id}', function (string $id) {
-    $products = [
-        1 => ['image' => 'image1.png', 'name' => 'Isolate Way', 'description' => 'Isolate Whey Protein is a high-quality protein supplement that supports muscle growth and recovery, making it ideal for athletes and fitness enthusiasts.', 'price' => 'Rp 200.000', 'dosage' => 'Drink once a day in the morning', 'type' => 'Powder'],
-        2 => ['image' => 'image2.png', 'name' => 'Friends Adult Diapers', 'description' => 'Friends Adult Diapers are designed for maximum comfort and protection, featuring a soft, breathable material that ensures a snug fit while effectively managing moisture and odor. With a high absorbency level, they provide confidence and security for individuals with incontinence, allowing for an active lifestyle without worries. The discreet design and adjustable tabs make them easy to wear and change, ensuring dignity and comfort throughout the day.', 'price' => 'Rp 75.000', 'dosage' => 'Every 4 to 6 hours', 'type' => 'Gel'],
-        3 => ['image' => 'image3.png', 'name' => 'LiveEasy', 'description' => 'Liveasy Wellness Calcium Magnesium Vitamin D3 & Zinc is a dietary supplement that supports bones and dental health, featuring a powerful blend of essential nutrients in a convenient 60-tablet bottle. These tablets are formulated to help strengthen bones and teeth while promoting overall wellness.', 'price' => 'Rp 100.000', 'dosage' => '2 tablets per day, preferably taken with meals.', 'type' => 'Tablet'],
-        4 => ['image' => 'image24.webp', 'name' => 'Sumagesic', 'description' => 'SUMAGESIC TABLET is a medication containing 600 mg of Paracetamol, effective for relieving pain and reducing fever.', 'price' => 'Rp 2.500', 'dosage' => 'Adults is 1 to 2 tablets every 4 to 6 hours as needed', 'type' => 'Tablets'],
-        5 => ['image' => 'image5.png', 'name' => 'NutriGo', 'description' => 'Nutrigo Powder Milk for Kids is a nutritious formula designed to support the growth and development of children, providing essential vitamins and minerals to promote healthy bones, immune function, and overall well-being. Its a delicious and convenient option for busy parents looking to enhance their childs diet.', 'price' => 'Rp 125.000', 'dosage' => 'Once or twice daily.', 'type' => 'Powder'],
-        6 => ['image' => 'image6.png', 'name' => 'Protinex', 'description' => 'Protinex Health And Nutritional Drink Mix For Adults with High protein & 8 Immuno Nutrients is ready to serve beverage mix that helps meet the nutrient requirements of Indian Adults. Protinex Original contains 17 essential vitamins and minerals including 8 immuno nutrients³; that support immunity, build strength and provide energy.', 'price' => 'Rp 90.000', 'dosage' => 'Drink one or two glasses a day for maximum effect.', 'type' => 'Powder'],
-        7 => ['image' => 'image7.png', 'name' => 'Episof', 'description' => 'Premium Grade Silicone Gel: Episof is a high-quality scar reducing cream made from premium-grade silicone; This ensures the product is safe and effective in caring for a variety of skin conditions.', 'price' => 'Rp 55.000', 'dosage' => 'Used twice a day, in the morning and evening.', 'type' => 'Gel'],
-        8 => ['image' => 'image8.png', 'name' => 'StayFree', 'description' => 'Stayfree is a trusted brand offering high-quality sanitary pads designed for ultimate comfort and protection during menstruation. Stayfree pads feature a soft, cottony surface to prevent irritation and are equipped with fast-absorption technology that locks away moisture, ensuring you stay dry and comfortable for hours. With secure wings for a snug fit and leak-proof barriers, Stayfree pads are ideal for active women, providing reliable protection throughout the day. Whether for light or heavy flow, Stayfree caters to various needs, ensuring hygiene, freshness, and confidence. 1 pack contains 7 pads.', 'price' => 'Rp 15.000', 'dosage' => 'Change your pad up to 5 times a day to maintain freshness and comfort.', 'type' => 'pads'],
-        9 => ['image' => 'image9.png', 'name' => 'Himalaya Ashvagandha Bottle Of 120 Tablets', 'description' => 'Ashvagandha is known for its adaptogenic properties, which help the body manage stress and anxiety by normalizing elevated cortisol levels2. It also boosts energy levels, enhances endurance, and supports overall well-being', 'price' => 'Rp 40.000', 'dosage' => '1 tablet twice daily or as direct by your doctor.', 'type' => 'Tablet'],
-        10 => ['image' => 'image22.png', 'name' => 'Tolak Angin', 'description' => 'Tolak Angin is a liquid herbal remedy formulated to relieve symptoms of colds and flu, particularly for those experiencing "masuk angin" or discomfort due to cold weather. Its blend of natural ingredients helps to warm the body, boost immunity, and ease respiratory issues, making it a popular choice for quick relief.', 'price' => 'Rp 15.000', 'dosage' => '2 to 3 times a day.', 'type' => 'Liquid'],
-        11 => ['image' => 'image23.webp', 'name' => 'Charm', 'description' => 'Charm sanitary pads with wings offer superior protection and comfort during your menstrual cycle. Designed to fit snugly and prevent leaks, these pads provide maximum absorbency while keeping you feeling fresh and confident all day long.', 'price' => 'Rp 125.000', 'dosage' => 'Changing them every 4 to 6 hours.', 'type' => 'Pads'],
-        12 => ['image' => 'image12.png', 'name' => 'Ketonof', 'description' => 'Ketoconazole Shampoo is a powerful antifungal treatment formulated to combat dandruff and other scalp conditions, effectively soothing irritation and reducing flaking. This 100ml bottle offers a convenient size for easy use at home or on the go, ensuring a healthy and balanced scalp.', 'price' => 'Rp 125.000', 'dosage' => 'Twice a week for the first 2 to 4 weeks.', 'type' => 'Liquid'],
+// Route::get('/pembelianObat/{id}', function (int $id) {
+//     // return view('obat');
+//     $data = PembelianObat::where('id_transaksi' ,$id)->get();
+//     return response()->json($data);
+// })->name('pembelianObat.showByIdTransaksi');
+
+// Route::post('/pembelianObat/store', [PembelianObatController::class, 'storeToCart'] 
+// )->name('pembelianObat.storeToCart');
+
+Route::post('/obat/store/{id}', function(Request $request, $id){
+    $validatedData = $request->validate([
+        'jumlah_obat' => 'required|integer',
+    ]);
+
+    // Prepare item data
+    $item = [
+        'id_obat' => $id,
+        'jumlah_obat' => $validatedData['jumlah_obat'],
     ];
 
-   
-    if (array_key_exists($id, $products)) {
-        
-        return view('detailObat', ['product' => $products[$id]]);
-    } else {
-      
-        return redirect()->back()->with('error', 'Produk tidak ditemukan');
-    }
-})->name('detailObat');
+    // Add or create cart items array in session
+    $cart = Session::get('cart.items', []);
+    $cart[] = $item;
+    Session::put('cart.items', $cart);
+    
+    return back()->with('success', 'Item ditambahkan ke keranjang');
+}
+    // return response()->json($item);
+// [ObatController::class, 'store'] 
+)->name('obat.store');
 
+Route::put('/obat/update/{id}', [ObatController::class, 'update']
+    // return response()->json($item);
+// [ObatController::class, 'store'] 
+)->name('obat.update');
+
+Route::middleware('auth')->group(
+    function () {
+        Route::get('/obat', [ObatController::class, 'index'])->name('getObat');
+        Route::get('/detail-obat/{id}', [ObatController::class, 'detail'])->name('getDetailObat');
+        Route::post('/add-to-cart/{id}', [TransaksiController::class, 'addToCart'])->name('addToCart');
+        Route::get('/cart', [TransaksiController::class, 'getCart'])->name('getCart');
+        Route::post('/cart/{id}/{value}', [TransaksiController::class, 'setValueCart'])->name('setValueCart');
+        Route::post('/checkout', [TransaksiController::class, 'checkout'])->name('checkout');
+        Route::post('/active-item/{id}', [TransaksiController::class, 'activeItem'])->name('activeItem');
+        Route::post('/payment-obat', [TransaksiController::class, 'storePembelianObat'])->name('paymentObat');
+    }
+);
+
+/////
 Route::get('/transaksiCheckout',function(){
     return view('/transaksiCheckout');
 })->name('transaksiCheckout');
@@ -136,41 +180,6 @@ Route::get('/pembayaranObat',function(){
 Route::get('/pembayaranKonsul',function(){
     return view('/pembayaranKonsul');
 })->name('pembayaranKonsul');
-
-Route::post('/edit-profil', function () {
-    $userData = [
-        'profil' => [
-            'username' => session('user')['profil']['username'],
-            'name' => $_POST['name'],
-            'password' => session('user')['profil']['password'],
-            'phone' => $_POST['phone'],
-            'email' => $_POST['email'],
-            'address' => $_POST['address']
-        ]
-    ];
-    
-    session(['user' => $userData]);
-
-    return redirect('/profil');
-});
-
-Route::post('/logout', function () {
-    $userData = [
-        'profil' => [
-            'username' => '',
-            'name' => '',
-            'password' => '',
-            'phone' => '',
-            'email' => '',
-            'address' => ''
-        ]
-    ];
-    
-    session(['user' => $userData]);
-
-    return redirect('/');
-});
-
 
 Route::get('/admin/dashboard', function () {
     return view('admin.dashboard');

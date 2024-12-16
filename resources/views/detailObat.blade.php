@@ -46,17 +46,19 @@
                 <div class="row justify-content-center">
                     <div class="col-md-4">
                         <img src="{{ asset('images/' . $product['image']) }}" class="card-img-top"
-                            alt="{{ $product['name'] }}">
+                            alt="{{ $product['nama_obat'] }}">
                     </div>
 
                     <div class="col-md-8">
-                        <h2 class="card-title-2 fw-bold">{{ $product['name'] }}</h2>
+                        <h2 class="card-title-2 fw-bold">{{ $product['nama_obat'] }}</h2>
 
                         <!-- Kontainer harga dan tombol -->
                         <div class="price-btn-container">
-                            <h1 class="text-success fw-bold">{{ $product['price'] }}</h1>
-                            <form action="{{ route('cart', ['id' => $product['id'] ?? 1]) }}" method="POST">
+                            <h1 class="text-success fw-bold">{{ $product['harga_obat'] }}</h1>
+                            <form action="{{ route('addToCart', ['id' => $product->id]) }}" method="POST">
                                 @csrf
+                                <input type="numeric" name="jumlah_obat" value="{{ 1 }}">
+                                <input type="hidden" name="id_obat" value="{{ 1 }}">
                                 <button type="submit" class="btn btn-primary fw-bold">Add To Cart</button>
                             </form>
                         </div>
@@ -69,12 +71,12 @@
                             <img src="{{ asset('images/mobil.png') }}" alt="Atma" width="21" height="21">
                             Send Fast Arrive
                         </div>
-                        <h5 class=" mt-5">Description</h5>
-                        <p class="card-text">{{ $product['description'] }}</p>
-                        <h5 class=" mt2">Dosage</h5>
-                        <p class="card-text">{{ $product['dosage'] }}</p>
-                        <h5 class=" mt-2">Type of Medicine</h5>
-                        <p class="card-text">{{ $product['type'] }}</p>
+                        <h5 class=" mt-5">Deskripsi</h5>
+                        <p class="card-text">{{ $product['deskripsi'] }}</p>
+                        <h5 class=" mt2">Jenis Obat</h5>
+                        <p class="card-text">{{ $product['jenis_obat'] }}</p>
+                        <h5 class=" mt-2">Stok</h5>
+                        <p class="card-text">{{ $product['stok'] }}</p>
 
                     </div>
                 </div>

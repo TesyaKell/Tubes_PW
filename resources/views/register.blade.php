@@ -130,7 +130,7 @@
             <h1><strong>Welcome Back!</strong></h1>
             <p>Stay connected with us,</p>
             <p style="margin-top:-30px;">please log in using your personal info.</p>
-            <a href="/" class="btn btn-outline-light">SIGN IN</a>
+            <a href="/login" class="btn btn-outline-light">SIGN IN</a>
         </div>
         <div class="login-section">
             <h1 class="mb-4 text-center" style="color:#768A6E;"><strong>Create Account</strong></h1>
@@ -140,87 +140,231 @@
                 <a href="#"><i class="bi bi-telephone"></i></a>
             </div>
             <p class="mt-4 mb-4 text-center">Or use Your Email Account</p>
-            <form class="text-center" action="register" method="POST">
+            <form method="POST" action="{{ route('register') }}" class="text-center">
                 @csrf
+
                 <div class="row">
-                    <div class="mb-3 d-flex justify-content-center">
-                        <div class="form-login input-group">
-                            <span class="input-group-text bg-light">
-                                <i class="bi bi-person-badge"></i>
-                            </span>
-                            <input type="text" class="form-control" id="username" name="username"
-                                placeholder="Username">
-                        </div>
-                    </div>
                     <div class="mb-3 d-flex justify-content-center">
                         <div class="form-login input-group">
                             <span class="input-group-text bg-light">
                                 <i class="bi bi-person"></i>
                             </span>
-                            <input type="text" class="form-control" id="name" name="name" placeholder="Name"
-                                required>
+                            <input type="text" class="form-control @error('name') is-invalid @enderror"
+                                id="name" name="name" placeholder="Name" required value="{{ old('name') }}">
+                            @error('name')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+
                         </div>
+                        <div class="invalid-feedback" id="nameError"></div>
                     </div>
+                    <!-- Email Field -->
                     <div class="mb-3 d-flex justify-content-center">
                         <div class="form-login input-group">
                             <span class="input-group-text bg-light">
                                 <i class="bi bi-envelope"></i>
                             </span>
-                            <input type="email" class="form-control" id="email" name='email' placeholder="Email"
-                                required>
+                            <input type="email" class="form-control @error('email') is-invalid @enderror"
+                                id="email" name="email" placeholder="Email" required value="{{ old('email') }}">
+                            @error('email')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+
                         </div>
+                        <div class="invalid-feedback" id="emailError"></div>
                     </div>
+
+
+                    <!-- Phone Number Field -->
+
                     <div class="mb-3 d-flex justify-content-center">
                         <div class="form-login input-group">
                             <span class="input-group-text bg-light">
                                 <i class="bi bi-telephone"></i>
                             </span>
-                            <input type="text" inputmode="numeric" class="form-control" id="phone" name="phone"
-                                placeholder="Phone Number" required>
+
+                            <input type="text" class="form-control @error('phone_number') is-invalid @enderror"
+                                id="phone_number" name="phone_number" placeholder="Phone Number"
+                                value="{{ old('phone_number') }}">
+                            @error('phone_number')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+
                         </div>
+                        <div class="invalid-feedback" id="phoneError"></div>
                     </div>
+
+
+                    <!-- Address Field -->
+
                     <div class="mb-3 d-flex justify-content-center">
                         <div class="form-login input-group">
                             <span class="input-group-text bg-light">
-                                <i class="bi bi-geo-alt"></i> </span>
-                            <input type="text" class="form-control" id="address" name="address"
-                                placeholder="Address" required>
+                                <i class="bi bi-geo-alt"></i>
+                            </span>
+
+                            <input type="text" class="form-control @error('address') is-invalid @enderror"
+                                id="address" name="address" placeholder="Address" value="{{ old('address') }}">
+                            @error('address')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+
                         </div>
+                        <div class="invalid-feedback" id="addressError"></div>
                     </div>
+
+                    <!-- Password Fields -->
+
                     <div class="mb-3 d-flex justify-content-center">
                         <div class="form-login input-group">
                             <span class="input-group-text bg-light">
-                                <i class="bi bi-three-dots"></i>
+                                <i class="bi bi-lock"></i>
                             </span>
-                            <input type="password" class="form-control" id="password" name="password"
-                                placeholder="Password" required>
-                            <span class="input-group-text bg-light">
-                                <i class="bi bi-eye"></i>
+
+                            <input type="password" class="form-control @error('password') is-invalid @enderror"
+                                id="password" name="password" placeholder="Password" required>
+                            <span class="input-group-text bg-light cursor-pointer" onclick="togglePassword('password')">
+                                <i class="bi bi-eye" id="passwordToggleIcon"></i>
+
                             </span>
+                            @error('password')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
+                        <div class="invalid-feedback" id="passwordError"></div>
                     </div>
+
                     <div class="mb-3 d-flex justify-content-center">
                         <div class="form-login input-group">
                             <span class="input-group-text bg-light">
-                                <i class="bi bi-three-dots"></i>
+                                <i class="bi bi-lock"></i>
                             </span>
-                            <input type="password" class="form-control" id="confirm_password"
-                                placeholder="Confirm Password" required>
-                            <span class="input-group-text bg-light">
-                                <i class="bi bi-eye"></i>
+
+                            <input type="password" class="form-control" id="password_confirmation"
+                                name="password_confirmation" placeholder="Confirm Password" required>
+                            <span class="input-group-text bg-light cursor-pointer"
+                                onclick="togglePassword('password_confirmation')">
+                                <i class="bi bi-eye" id="confirmPasswordToggleIcon"></i>
+
                             </span>
                         </div>
+                        <div class="invalid-feedback" id="passwordConfirmError"></div>
                     </div>
                 </div>
+
+
                 <button type="submit" class="btn sign-in-btn rounded-pill" style="width: 17%;">SIGN UP</button>
+
             </form>
         </div>
     </div>
 
-    <!-- Bootstrap JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(inputId === 'password' ? 'passwordToggleIcon' :
+                'confirmPasswordToggleIcon');
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('bi-eye');
+                icon.classList.add('bi-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('bi-eye-slash');
+                icon.classList.add('bi-eye');
+            }
+        }
     </script>
 </body>
 
+<script>
+    function togglePassword(inputId) {
+        const input = document.getElementById(inputId);
+        const icon = document.getElementById(inputId === 'password' ? 'passwordToggleIcon' : 'confirmPasswordToggleIcon');
+        
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('bi-eye');
+            icon.classList.add('bi-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.remove('bi-eye-slash');
+            icon.classList.add('bi-eye');
+        }
+    }
+
+    function clearErrors() {
+        const errorElements = document.querySelectorAll('.invalid-feedback');
+        errorElements.forEach(element => {
+            element.textContent = '';
+            element.style.display = 'none';
+        });
+
+        const inputs = document.querySelectorAll('.form-control');
+        inputs.forEach(input => {
+            input.classList.remove('is-invalid');
+        });
+    }
+
+    function showError(field, message) {
+        const errorElement = document.getElementById(field + 'Error');
+        const input = document.getElementById(field);
+        
+        if (errorElement && input) {
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            input.classList.add('is-invalid');
+        }
+    }
+
+    async function handleRegister(event) {
+        event.preventDefault();
+        clearErrors();
+
+        const spinner = document.getElementById('loadingSpinner');
+        const submitButton = document.getElementById('submitButton');
+        spinner.classList.remove('d-none');
+        submitButton.disabled = true;
+
+        const formData = new FormData(event.target);
+
+        try {
+            const response = await fetch('/api/register', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+                    'Accept': 'application/json'
+                },
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                if (response.status === 422) {
+                    Object.keys(data.errors).forEach(field => {
+                        showError(field, data.errors[field][0]);
+                    });
+                } else {
+                    alert(data.message || 'Registration failed. Please try again.');
+                }
+            } else {
+                // Success
+                localStorage.setItem('auth_token', data.token);
+                alert('Registration successful!');
+                window.location.href = '/login'; 
+            }
+        } catch (error) {
+            console.error('Registration error:', error);
+            alert('An error occurred during registration. Please try again.');
+        } finally {
+            spinner.classList.add('d-none');
+            submitButton.disabled = false;
+        }
+    }
+</script>
 </html>
+
