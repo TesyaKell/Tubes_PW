@@ -1,12 +1,6 @@
 @extends('IndexAdmin')
 
 @section('content')
-    @php
-        // Debug untuk cek variable
-        var_dump(isset($totalCustomers));
-        var_dump($totalCustomers ?? 'tidak ada');
-    @endphp
-
     <style>
         /* Mengatur tampilan umum konten */
         body {
@@ -152,7 +146,8 @@
                     <div class="inventory-section p-3">
                         <div class="d-flex justify-content-between">
                             <h6>Customers</h6>
-                            <div class="go-link"><a href="{{ url('admin/usermanagement') }}">Go to Customers Page &gt;&gt;</a></div>
+                            <div class="go-link"><a href="{{ url('admin/usermanagement') }}">Go to Customers Page
+                                    &gt;&gt;</a></div>
                         </div>
                         <div class="row mt-3">
                             <div class="col-md-6">
