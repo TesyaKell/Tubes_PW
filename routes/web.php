@@ -3,9 +3,9 @@
 use App\Http\Controllers\ObatController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ReservasiKonsultasiController;
-use App\Models\PembelianObat;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TransaksiController;
+use App\Http\Controllers\AdminController;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -20,7 +20,8 @@ $user = [
         'phone_number' => '',
         'address' => '',
         'email' => '',
-    ]];
+    ]
+];
 
 session(['user' => $user]);
 
@@ -29,7 +30,7 @@ Route::get('/', function () {
 });
 
 //ROUTE LOGIN 
-Route::get('/login', [UserController::class, 'showLoginForm'])->name('login');
+Route:: get('/login', [UserController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [UserController::class, 'login'])->name('login');
 
 //ROUTE REGISTER
@@ -93,7 +94,7 @@ Route::delete('/reservasi/{id}', [ReservasiKonsultasiController::class, 'destroy
 
 Route::get('/reservation', function () {
     return view('reservation');
-})->name('reservation'); 
+})->name('reservation');
 
 Route::get('/obat', function () {
     return view('obat');
@@ -106,7 +107,7 @@ Route::get('/jenisObat/{jenis}', [ObatController::class, 'getAllObatByJenis'])->
 //     return view('detailObat');
 // })->name('detailObat');
 
-Route::get('/cart', function(){
+Route::get('/cart', function () {
     return view('cart');
 })->name('cart');
 
@@ -124,29 +125,33 @@ Route::get('/about', function () {
 // Route::post('/pembelianObat/store', [PembelianObatController::class, 'storeToCart'] 
 // )->name('pembelianObat.storeToCart');
 
-Route::post('/obat/store/{id}', function(Request $request, $id){
-    $validatedData = $request->validate([
-        'jumlah_obat' => 'required|integer',
-    ]);
+Route::post(
+    '/obat/store/{id}',
+    function (Request $request, $id) {
+        $validatedData = $request->validate([
+            'jumlah_obat' => 'required|integer',
+        ]);
 
-    // Prepare item data
-    $item = [
-        'id_obat' => $id,
-        'jumlah_obat' => $validatedData['jumlah_obat'],
-    ];
+        // Prepare item data
+        $item = [
+            'id_obat' => $id,
+            'jumlah_obat' => $validatedData['jumlah_obat'],
+        ];
 
-    // Add or create cart items array in session
-    $cart = Session::get('cart.items', []);
-    $cart[] = $item;
-    Session::put('cart.items', $cart);
-    
-    return back()->with('success', 'Item ditambahkan ke keranjang');
-}
+        // Add or create cart items array in session
+        $cart = Session::get('cart.items', []);
+        $cart[] = $item;
+        Session::put('cart.items', $cart);
+
+        return back()->with('success', 'Item ditambahkan ke keranjang');
+    }
     // return response()->json($item);
 // [ObatController::class, 'store'] 
 )->name('obat.store');
 
-Route::put('/obat/update/{id}', [ObatController::class, 'update']
+Route::put(
+    '/obat/update/{id}',
+    [ObatController::class, 'update']
     // return response()->json($item);
 // [ObatController::class, 'store'] 
 )->name('obat.update');
@@ -165,48 +170,66 @@ Route::middleware('auth')->group(
 );
 
 /////
-Route::get('/transaksiCheckout',function(){
+Route::get('/transaksiCheckout', function () {
     return view('/transaksiCheckout');
 })->name('transaksiCheckout');
 
-Route::get('/transaksiCheckoutKonsul',function(){
+Route::get('/transaksiCheckoutKonsul', function () {
     return view('/transaksiCheckoutKonsul');
 })->name('transaksiCheckoutKonsul');
 
-Route::get('/pembayaranObat',function(){
+Route::get('/pembayaranObat', function () {
     return view('/pembayaranObat');
 })->name('pembayaranObat');
 
-Route::get('/pembayaranKonsul',function(){
+Route::get('/pembayaranKonsul', function () {
     return view('/pembayaranKonsul');
 })->name('pembayaranKonsul');
 
-Route::get('/admin/dashboard', function () {
-    return view('admin.dashboard');
-});
-Route::get('/admin/listofmedicines', function () {
-    return view('admin.listofmedicines');
-});
+
+
+Route::get('/admin/dashboard', [AdminController::class, 'adminDashboard'])->name('admin.dashboard');
+
+Route::get('/admin/listofmedicines', [AdminController::class, 'listMedicines']);
+
 Route::get('/admin/medicinegroups', function () {
     return view('admin.medicinegroups');
 });
-Route::get('/admin/usermanagement', function () {
-    return view('admin.usermanagement');
-});
+Route::get('/admin/usermanagement', [AdminController::class, 'userManagement'])->name('admin.users');
 
+Route::get('/admin/detail/{obat}', [AdminController::class, 'detailObat'])->name('admin.detail');
+Route::delete('/admin/deletemedicine/{obat}', [AdminController::class, 'deleteObat'])->name('admin.deletemedicine');
+// Route::get('/admin/detail', function () {
+//     return view('admin.detail');
+// });
 
-Route::get('/admin/detail', function () {
-    return view('admin.detail');
-});
-Route::get('/admin/detailgroup', function () {
-    return view('admin.detailgroup');
-});
-Route::get('/admin/editmedicine', function () {
-    return view('admin.editmedicine');
-});
-Route::get('/admin/addmedicine', function () {
-    return view('admin.addmedicine');
-});
-Route::get('/admin/editprofile', function () {
-    return view('admin.editprofile');
-});
+Route::get('/admin/medicinegroups', [AdminController::class, 'medicineGroups'])->name('admin.medicinegroups');
+Route::get('/admin/detailgroup/{jenis}', [AdminController::class, 'detailGroup'])->name('admin.detailgroup');
+Route::post('/admin/storegroup', [AdminController::class, 'storeGroup'])->name('admin.storeGroup');
+
+// Route::delete('/admin/group/{jenis_obat}/medicine/{obat}', [AdminController::class, 'removeMedicine'])->name('admin.removeMedicine');
+Route::delete('/admin/group/{group}/remove/{obat}', [AdminController::class, 'removeFromGroup'])->name('admin.removeFromGroup');
+Route::delete('/admin/group/{jenis_obat}', [AdminController::class, 'deleteGroup'])->name('admin.deleteGroup');
+Route::post('/admin/group/{group}/add', [AdminController::class, 'addToGroup'])->name('admin.addToGroup');// Route::get('/admin/detailgroup', function () {
+//     return view('admin.detailgroup');
+// });
+
+Route::get('/admin/editmedicine/{obat}', [AdminController::class, 'editObat'])->name('admin.editmedicine');
+Route::put('/admin/editmedicine/{obat}', [AdminController::class, 'updateObat'])->name('admin.updateObat');
+Route::delete('/admin/deletemedicine/{obat}', [AdminController::class, 'deleteObat'])->name('admin.deletemedicine');
+// Route::get('/admin/editmedicine', function () {
+//     return view('admin.editmedicine');
+// });
+
+Route::get('/admin/addmedicine', [AdminController::class, 'createObat'])->name('admin.addmedicine');
+Route::post('/admin/storemedicine', [AdminController::class, 'storeObat'])->name('admin.storeObat');
+Route::delete('/admin/group/{group}/remove/{obat}', [AdminController::class, 'removeFromGroup'])->name('admin.removeFromGroup');
+Route::delete('/admin/group/{group}', [AdminController::class, 'deleteGroup'])->name('admin.deleteGroup');
+
+// Route::get('/admin/addmedicine', function () {
+//     return view('admin.addmedicine');
+// });
+
+Route::get('/admin/editprofile/{user}', [AdminController::class, 'editUser'])->name('admin.editprofile');
+Route::put('/admin/editprofile/{user}', [AdminController::class, 'updateUser'])->name('admin.updateUser');
+Route::delete('/admin/editprofile/{user}', [AdminController::class, 'deleteUser'])->name('admin.deleteUser');

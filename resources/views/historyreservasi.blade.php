@@ -15,7 +15,6 @@
             <table class="table table-bordered table-striped">
                 <thead class="thead-dark">
                     <tr class="text-center">
-                        <th>No.</th>
                         <th>Patient Name</th>
                         <th>Age</th>
                         <th>Gender</th>
@@ -32,17 +31,16 @@
                 <tbody>
                     @forelse ($reservasi as $item)
                         <tr>
-                            <td>{{ $item->id_reservasi_konsultasi }}</td>
                             <td>{{ $item->nama_lengkap_pasien }}</td>
                             <td>{{ $item->usia_pasien }}</td>
                             <td>{{ $item->jenis_kelamin }}</td>
                             <td>{{ $item->berat_badan_pasien }}</td>
-                            <td>{{ $item->alergi_pasien ?? 'No allergies' }}</td>
                             <td>{{ $item->keluhan }}</td>
+                            <td>{{ $item->alergi_pasien ?? 'No allergies' }}</td>
                             <td>{{ $item->tanggal_reservasi_konsultasi }}</td>
                             <td>{{ $item->jam_reservasi_konsultasi }}</td>
                             <td>{{ $item->metode_transaksi_reservasi }}</td>
-                            <td>{{ $item->status_reservasi }}</td>
+                            <td class="text-success fw-bold">{{ $item->status_reservasi }}</td>
                         </tr>
                     @empty
                         <tr>

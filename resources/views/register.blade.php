@@ -283,8 +283,9 @@
 <script>
     function togglePassword(inputId) {
         const input = document.getElementById(inputId);
-        const icon = document.getElementById(inputId === 'password' ? 'passwordToggleIcon' : 'confirmPasswordToggleIcon');
-        
+        const icon = document.getElementById(inputId === 'password' ? 'passwordToggleIcon' :
+            'confirmPasswordToggleIcon');
+
         if (input.type === 'password') {
             input.type = 'text';
             icon.classList.remove('bi-eye');
@@ -312,7 +313,7 @@
     function showError(field, message) {
         const errorElement = document.getElementById(field + 'Error');
         const input = document.getElementById(field);
-        
+
         if (errorElement && input) {
             errorElement.textContent = message;
             errorElement.style.display = 'block';
@@ -355,7 +356,7 @@
                 // Success
                 localStorage.setItem('auth_token', data.token);
                 alert('Registration successful!');
-                window.location.href = '/login'; 
+                window.location.href = '/login';
             }
         } catch (error) {
             console.error('Registration error:', error);
@@ -366,5 +367,5 @@
         }
     }
 </script>
-</html>
 
+</html>

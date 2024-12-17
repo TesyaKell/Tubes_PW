@@ -15,5 +15,6 @@ class Obat extends Model
         'harga_obat',
         'jenis_obat',
         'deskripsi',
+        'image',
     ];
 }

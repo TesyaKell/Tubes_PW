@@ -24,8 +24,8 @@
         .card-section {
             display: flex;
             width: 90%;
-            max-width: 1300px;
-            min-height: 660px;
+            max-width: 1100px;
+            min-height: 220px;
             background-color: white;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             border-radius: 17px;
@@ -141,7 +141,7 @@
             <span class="img-logo d-flex align-items-start"><img src="{{ asset('images/green-logo.png') }}"
                     alt=""></span>
 
-            <h1 class="mb-4 mt-4 text-center" style="color:#768A6E;"><strong>Sign in to Apotek Atma</strong></h1>
+            <h2 class="mb-4 mt-4 text-center" style="color:#768A6E;"><strong>Sign in to Apotek Atma</strong></h2>
 
             <div class="social-icons mb-3 text-center">
                 <a href="#"><i class="bi bi-facebook"></i></a>
@@ -183,18 +183,6 @@
 
                         </div>
                     </div>
-                    <div class="mb-3 d-flex justify-content-center">
-                        <div class="form-login input-group">
-                            <span class="input-group-text bg-light">
-                                <i class="bi bi-three-dots"></i>
-                            </span>
-                            <input type="password" class="form-control" id="password" name="password"
-                                placeholder="Password" required>
-                            <span class="input-group-text bg-light cursor-pointer" onclick="togglePassword()">
-                                <i class="bi bi-eye" id="passwordToggleIcon"></i>
-                            </span>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="mb-3 d-flex justify-content-center align-items-center">
@@ -205,7 +193,7 @@
                         </label>
                     </div>
                 </div>
-                <button type="submit" class="btn sign-in-btn rounded-pill" style="width: 17%;">SIGN IN</button>
+                <button type="submit" class="btn sign-in-btn rounded-pill" style="width: 30%;">SIGN IN</button>
             </form>
         </div>
 
@@ -245,7 +233,7 @@
     function togglePassword() {
         const input = document.getElementById('password');
         const icon = document.getElementById('passwordToggleIcon');
-        
+
         if (input.type === 'password') {
             input.type = 'text';
             icon.classList.remove('bi-eye');
@@ -273,7 +261,7 @@
     function showError(field, message) {
         const errorElement = document.getElementById(field + 'Error');
         const input = document.getElementById(field);
-        
+
         if (errorElement && input) {
             errorElement.textContent = message;
             errorElement.style.display = 'block';
@@ -341,4 +329,5 @@
         }
     }
 </script>
+
 </html>

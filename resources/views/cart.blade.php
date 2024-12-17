@@ -43,14 +43,13 @@
                                 </div>
                             @endif
 
-                            <h2 class="card-title mb-4" style="color:#768A6E;">Keranjang:</h2>
+                            <h2 class="card-title mb-4" style="color:#768A6E;"><strong>Cart:</strong></h2>
                             @if (!empty($cart))
                                 @foreach ($cart as $item)
                                     <div class="d-flex justify-content-between align-items-center mb-4 mt-4">
                                         <div class="d-flex align-items-center">
                                             <input class="form-check-input mt-0" type="checkbox" name="selected_items[]"
-                                                value="{{ $item['id'] }}"
-                                                aria-label="Checkbox for following text input"
+                                                value="{{ $item['id'] }}" aria-label="Checkbox for following text input"
                                                 {{ $item['selected'] ? 'checked' : '' }}
                                                 onclick="toggleItemStatus({{ $item['id'] }})">
                                             <img src="{{ asset('images/' . $item['image']) }}"
@@ -92,7 +91,7 @@
                                 <div class="d-flex justify-content-end"
                                     style="border-bottom: 1px solid black; padding-bottom: 10px;">
                                     <a type="button" class="btn text-white" style="background-color: #768A6E;"
-                                        href="{{ route('getObat') }}">Tambah Obat</a>
+                                        href="{{ route('getObat') }}">Add Medicine</a>
                                 </div>
                                 <!-- Checkout Button -->
                                 <form action="{{ route('checkout') }}" method="POST">
@@ -104,7 +103,7 @@
                                     </div>
                                 </form>
                             @else
-                                <p class="text-center" style="color: #768A6E;">Keranjang kosong.</p>
+                                <p class="text-center" style="color: #768A6E;">Empty Cart.</p>
                             @endif
                         </div>
                     </div>

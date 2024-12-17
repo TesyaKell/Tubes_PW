@@ -82,7 +82,7 @@
         <div class="card-body-2">
             <div class="row">
                 <div class="col-5 ms-5 ps-5">
-                    <h1 class="text-white mt-3 fw-bold">Your Prescription for Affordable Health Solutions!</h1>
+                    <h2 class="text-white mt-3 fw-bold">Your Prescription for Affordable Health Solutions!</h2>
                     <p class="fs-5">Elevate your health journey with exclusive discounts and unparalleled convenience.
                         Your path to well-being starts here, where every purchase is a prescription for savings.</p>
                     <a href="{{ url('listObat') }}" class="btn btn-light text-success">Start Shopping
@@ -117,7 +117,8 @@
                     <img src="{{ asset('images/' . $obat->image) }}" alt="{{ $obat->jenis_obat }}"
                         class="h-48 w-full object-cover rounded-t-lg">
                     <div class="mt-2">
-                        <h5 class="text-center text-lg font-semibold text-gray-800">{{ $obat->jenis_obat }}</h5>
+                        <h5 class="text-center text-lg font-semibold text-gray-800 no-underline">{{ $obat->jenis_obat }}
+                        </h5>
                     </div>
                 </div>
             </a>
@@ -136,7 +137,7 @@
                         <img class="h-48 w-full object-cover rounded-t-lg" src="{{ asset('images/' . $obat->image) }}"
                             alt="{{ $obat->nama_obat }}">
                         <div class="mt-2 text-center">
-                            <h5 class="text-lg font-semibold text-gray-800">{{ $obat->nama_obat }}</h5>
+                            <h5 class="text-lg font-semibold text-gray-800 no-underline">{{ $obat->nama_obat }}</h5>
                             <h6 class="text-sm text-gray-500">Rp.{{ $obat->harga_obat }}</h6>
                         </div>
                     </div>
